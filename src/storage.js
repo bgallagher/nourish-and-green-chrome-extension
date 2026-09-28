@@ -1,7 +1,17 @@
 // chrome.storage.local helpers.
 // prefs:    { [studentId]: { favourites: { [productId]: title }, hidden: { [productId]: title } } }
 // dayOrder: { [studentId]: { days: [dayOfWeekId, ...], savedAt } }
+// snapshot: { name, savedAt, days: [{ dow, date: 'YYYY-MM-DD' | null, dateText, open, meal: { name, img } | null }] }
+//           what the planner last saw, for the toolbar popup
 var NG = globalThis.NG || (globalThis.NG = {});
+
+// Serialise read-modify-write updates so quick clicks can't overwrite each other.
+let ngStoreQueue = Promise.resolve();
+function ngStoreUpdate(fn) {
+  const run = ngStoreQueue.then(fn);
+  ngStoreQueue = run.catch(() => {});
+  return run;
+}
 
 NG.store = {
   async getStudentPrefs(studentId) {
@@ -11,15 +21,17 @@ NG.store = {
   },
 
   // Toggles productId in the given list ('favourites' | 'hidden'); returns the new state.
-  async toggle(studentId, list, productId, title) {
-    const { prefs = {} } = await chrome.storage.local.get('prefs');
-    const p = prefs[studentId] || (prefs[studentId] = { favourites: {}, hidden: {} });
-    const bucket = p[list] || (p[list] = {});
-    const on = !(productId in bucket);
-    if (on) bucket[productId] = title;
-    else delete bucket[productId];
-    await chrome.storage.local.set({ prefs });
-    return on;
+  toggle(studentId, list, productId, title) {
+    return ngStoreUpdate(async () => {
+      const { prefs = {} } = await chrome.storage.local.get('prefs');
+      const p = prefs[studentId] || (prefs[studentId] = { favourites: {}, hidden: {} });
+      const bucket = p[list] || (p[list] = {});
+      const on = !(productId in bucket);
+      if (on) bucket[productId] = title;
+      else delete bucket[productId];
+      await chrome.storage.local.set({ prefs });
+      return on;
+    });
   },
 
   async getDayOrder(studentId) {
@@ -27,9 +39,20 @@ NG.store = {
     return dayOrder[studentId]?.days || null;
   },
 
-  async setDayOrder(studentId, days) {
-    const { dayOrder = {} } = await chrome.storage.local.get('dayOrder');
-    dayOrder[studentId] = { days, savedAt: Date.now() };
-    await chrome.storage.local.set({ dayOrder });
+  async getSnapshot() {
+    const { snapshot = null } = await chrome.storage.local.get('snapshot');
+    return snapshot;
+  },
+
+  setSnapshot(snapshot) {
+    return chrome.storage.local.set({ snapshot });
+  },
+
+  setDayOrder(studentId, days) {
+    return ngStoreUpdate(async () => {
+      const { dayOrder = {} } = await chrome.storage.local.get('dayOrder');
+      dayOrder[studentId] = { days, savedAt: Date.now() };
+      await chrome.storage.local.set({ dayOrder });
+    });
   },
 };

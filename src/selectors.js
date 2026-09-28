@@ -3,6 +3,8 @@ var NG = globalThis.NG || (globalThis.NG = {});
 
 NG.SEL = {
   // Day menu page (/student/editstudentcart/...)
+  cartForm: '#student-carts-form',
+  productDescription: '.description',
   itemGrid: '.student-carts .item-grid',
   itemBox: '.item-box',
   productItem: '.product-item[data-productid]',
@@ -16,15 +18,21 @@ NG.SEL = {
   // Dashboard (/dashboard)
   swiper: '.swiper',
   swiperSlide: '.swiper-slide:not(.swiper-slide-duplicate)',
-  swiperChrome: '.swiper-button-prev, .swiper-button-next, .swiper-pagination, .swiper-scrollbar',
   dayName: '.day-summary-intro h2',
   dayDate: '.day-summary-intro span',
-  dayIntro: '.day-summary-intro',
-  mealImage: '.meal-image',
-  editButton: '.edit-day-action a',
+  dayMeals: '.day-summary-cart ul li',
+  dayMealImage: '.meal-image img',
+  studentTab: 'a[href*="studentId="]',
+  // Site header (logo, account links), replaced by the planner's own top bar.
+  siteHeader: '.header',
+  accountLink: 'a[href*="/customer/info"]',
+  logoutLink: 'a[href*="/logout"]',
+  siteFooter: '.footer',
+  // The site's dashboard content, hidden and replaced by the planner (nearest match wins).
+  dashboardMain: '.page, .center-1, main',
 
-  // Prices shown on day cards / menu items (hidden when zero)
-  price: '.cart-total, .prices',
+  // Prices on menu items (hidden when zero)
+  price: '.prices',
 };
 
 // True if the element's text contains a money amount and every amount is zero (e.g. "Daily Total: €0.00").
@@ -40,6 +48,12 @@ NG.hideZeroPrices = (root = document) => {
 };
 
 NG.CART_HOT_LUNCH = 1;
+
+// Mirrors the site's AjaxCart.success_process: a pick normally comes back as just
+// { redirect } (no `success`). It's a failure only when success is false, or when there's
+// a message without success === true (the site shows that as an error bar).
+NG.isFailedCartResponse = (json) =>
+  !json || json.success === false || (!!json.message && json.success !== true);
 
 // Parses /student/editstudentcart/{studentId}/{cartTypeId}/{dayOfWeekId}/0 from a path or href.
 NG.parseCartPath = (href) => {

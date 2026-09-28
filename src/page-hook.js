@@ -20,7 +20,9 @@
   function wrap(cart) {
     const original = cart.success_process;
     cart.success_process = function (response, ...rest) {
-      if (response && response.success) {
+      // Same rule as NG.isFailedCartResponse: a bare { redirect } is a successful pick.
+      const failed = !response || response.success === false || (!!response.message && response.success !== true);
+      if (!failed) {
         window.dispatchEvent(new CustomEvent('ng:picked', { detail: { message: response.message || '' } }));
         return;
       }

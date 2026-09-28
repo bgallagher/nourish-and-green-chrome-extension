@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Nourish + Green Helper",
-  "version": "0.1.0",
-  "description": "Faster lunch picking on the Nourish + Green parent portal: favourites, hidden meals, auto-advance and a week-view dashboard.",
+  "version": "0.3.0",
+  "description": "Faster lunch picking on the Nourish + Green parent portal: a week planner with a pick-in-place drawer, favourites and hidden meals.",
   "permissions": [
     "storage"
   ],
@@ -47,12 +47,17 @@
       "js": [
         "src/selectors.js",
         "src/storage.js",
-        "src/dashboard.js"
+        "src/portal.js",
+        "src/planner.js"
       ],
       "css": [
-        "src/dashboard.css"
+        "src/planner.css"
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "action": {
+    "default_title": "This week's lunches",
+    "default_popup": "popup/popup.html"
+  }
 }
