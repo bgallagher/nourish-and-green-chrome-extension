@@ -183,7 +183,6 @@
             day.meal.img ? h('img', { class: 'ng-card-img', src: day.meal.img, alt: '' }) : null,
             h('span', { class: 'ng-card-name', text: day.meal.name }),
           ),
-          h('span', { class: 'ng-card-action', text: 'Change' }),
         ]
       : [
           h('div', { class: 'ng-card-none' }, icon(ICON.clock), h('span', { text: 'No lunch chosen' })),
@@ -194,7 +193,7 @@
       type: 'button',
       class: cls,
       style,
-      'aria-label': `${day.dow} ${dayDate(day)}: ${day.meal ? day.meal.name + '. Change' : 'no lunch chosen. Choose lunch'}`,
+      'aria-label': `${day.dow} ${dayDate(day)}: ${day.meal ? `${day.meal.name}. Change lunch` : 'no lunch chosen. Choose lunch'}`,
       onclick: () => openDay(day),
     }, top, body);
   }
@@ -323,11 +322,18 @@
           }, icon(ICON.heart(fav))),
         ),
       ),
+      // The picture chooses; the name opens the site's ingredients & allergens page.
       h('div', { class: 'ng-tile-info' },
-        h('span', { class: 'ng-tile-name', text: item.title }),
         item.detailHref
-          ? h('a', { class: 'ng-tile-link', href: item.detailHref, target: '_blank', rel: 'noopener', text: 'Ingredients & allergens' })
-          : null,
+          ? h('a', {
+              class: 'ng-tile-name',
+              href: item.detailHref,
+              target: '_blank',
+              rel: 'noopener',
+              title: 'Ingredients & allergens',
+              text: item.title,
+            })
+          : h('span', { class: 'ng-tile-name', text: item.title }),
       ),
     );
   }

@@ -574,26 +574,26 @@ html:has(#ng-planner .ng-drawer[open]) {
   color: var(--ng-ink-2);
 }
 
+/* The min-height lives on the strip so the name link only covers the text itself. */
 #ng-planner .ng-tile-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  min-height: 64px;
   padding: 10px 12px 12px;
 }
 
+/* Same type as the meal names on the day cards. */
 #ng-planner .ng-tile-name {
-  min-height: 42px;
-  font-family: var(--ng-display);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 1.25;
+  display: inline;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
   color: var(--ng-ink);
+  text-decoration: none;
 }
 
-#ng-planner .ng-tile-link {
-  align-self: flex-start;
-  font-size: 13px;
+#ng-planner a.ng-tile-name:hover {
   color: var(--ng-link);
+  text-decoration: underline;
 }
 
 /* ---- Hidden meals ---- */
