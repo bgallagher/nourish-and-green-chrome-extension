@@ -1,0 +1,5 @@
+/* Every portal page: hide the English/Gaeilge language picker (nopCommerce markup). */
+.language-selector,
+#customerlanguage {
+  display: none !important;
+}

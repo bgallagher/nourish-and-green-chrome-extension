@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Nourish + Green Helper",
+  "version": "0.1.0",
+  "description": "Faster lunch picking on the Nourish + Green parent portal: favourites, hidden meals, auto-advance and a week-view dashboard.",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://portal.nourishandgreen.ie/*"
+      ],
+      "css": [
+        "src/global.css"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://portal.nourishandgreen.ie/student/editstudentcart/*"
+      ],
+      "js": [
+        "src/selectors.js",
+        "src/storage.js",
+        "src/meal-page.js"
+      ],
+      "css": [
+        "src/meal-page.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.nourishandgreen.ie/student/editstudentcart/*"
+      ],
+      "js": [
+        "src/page-hook.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.nourishandgreen.ie/dashboard*"
+      ],
+      "js": [
+        "src/selectors.js",
+        "src/storage.js",
+        "src/dashboard.js"
+      ],
+      "css": [
+        "src/dashboard.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
