@@ -201,5 +201,25 @@ NG.portal = (() => {
     throw new Error("The portal said OK but the meal doesn't show as chosen. Check this day on the site.");
   }
 
-  return { parseDate, mondayOf, parseDashboardDays, studentName, loadMenu, choose };
+  // ---- Snapshot (for the toolbar popup and the icon badge) ----
+
+  const isoDate = (d) =>
+    d ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` : null;
+
+  // `origin` resolves relative image paths so the popup can load them.
+  function toSnapshot(days, name, origin) {
+    return {
+      name,
+      savedAt: Date.now(),
+      days: days.map((d) => ({
+        dow: d.dow,
+        date: isoDate(d.date),
+        dateText: d.dateText,
+        open: !!d.link,
+        meal: d.meal ? { name: d.meal.name, img: d.meal.img ? new URL(d.meal.img, origin).href : '' } : null,
+      })),
+    };
+  }
+
+  return { parseDate, mondayOf, parseDashboardDays, studentName, loadMenu, choose, toSnapshot };
 })();

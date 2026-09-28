@@ -18,22 +18,12 @@
 
   const name = NG.portal.studentName(document, studentId);
 
-  // Save what we can see for the toolbar popup's quick look.
-  const isoDate = (d) =>
-    d ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` : null;
+  // Save what we can see for the toolbar popup and icon badge. Being here also proves we're logged in.
   function saveSnapshot() {
-    NG.store.setSnapshot({
-      name,
-      savedAt: Date.now(),
-      days: days.map((d) => ({
-        dow: d.dow,
-        date: isoDate(d.date),
-        dateText: d.dateText,
-        open: !!d.link,
-        meal: d.meal ? { name: d.meal.name, img: d.meal.img ? new URL(d.meal.img, location.origin).href : '' } : null,
-      })),
-    }).catch((err) => console.error(LOG, 'Could not save snapshot', err));
+    NG.store.setSnapshot(NG.portal.toSnapshot(days, name, location.origin))
+      .catch((err) => console.error(LOG, 'Could not save snapshot', err));
   }
+  NG.store.setStatus('ok');
   saveSnapshot();
 
   const state = {

@@ -1,11 +1,23 @@
 {
   "manifest_version": 3,
   "name": "Nourish + Green Helper",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Faster lunch picking on the Nourish + Green parent portal: a week planner with a pick-in-place drawer, favourites and hidden meals.",
   "permissions": [
-    "storage"
+    "storage",
+    "alarms",
+    "offscreen"
   ],
+  "host_permissions": [
+    "https://portal.nourishandgreen.ie/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "This week's lunches",
+    "default_popup": "popup/popup.html"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -55,9 +67,5 @@
       ],
       "run_at": "document_idle"
     }
-  ],
-  "action": {
-    "default_title": "This week's lunches",
-    "default_popup": "popup/popup.html"
-  }
+  ]
 }

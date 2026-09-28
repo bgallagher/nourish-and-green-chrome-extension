@@ -28,6 +28,8 @@ NG.SEL = {
   accountLink: 'a[href*="/customer/info"]',
   logoutLink: 'a[href*="/logout"]',
   siteFooter: '.footer',
+  // The login form (seen when a background check finds the session has expired).
+  loginForm: 'form[action*="/login" i] input[name="Password"]',
   // The site's dashboard content, hidden and replaced by the planner (nearest match wins).
   dashboardMain: '.page, .center-1, main',
 

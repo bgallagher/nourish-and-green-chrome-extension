@@ -37,10 +37,69 @@ h1 {
   color: var(--green);
 }
 
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
 .updated {
-  margin: 2px 0 0;
+  margin: 0;
   font-size: 12px;
   color: var(--muted);
+}
+
+.check {
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.check:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fdecea;
+  color: #8a1c14;
+  font-weight: 700;
+}
+
+.login[hidden] {
+  display: none;
+}
+
+.login p {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.login-btn {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #d93025;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .list {

@@ -1,5 +1,7 @@
 // Toolbar popup: a quick look at upcoming lunches, from the snapshot the planner saves.
-const PORTAL_DASHBOARD = 'https://portal.nourishandgreen.ie/dashboard';
+const PORTAL = 'https://portal.nourishandgreen.ie';
+const PORTAL_DASHBOARD = `${PORTAL}/dashboard`;
+const PORTAL_LOGIN = `${PORTAL}/login?returnUrl=%2Fdashboard`;
 
 const $ = (id) => document.getElementById(id);
 
@@ -53,8 +55,9 @@ function row(day, label, isToday) {
 }
 
 async function render() {
-  const snap = await NG.store.getSnapshot();
+  const [snap, status] = await Promise.all([NG.store.getSnapshot(), NG.store.getStatus()]);
   const list = $('list');
+  $('login').hidden = status?.state !== 'login';
 
   if (!snap?.days?.length) {
     list.replaceChildren(h('p', { class: 'note', text: 'Open the planner once and your lunches will show up here.' }));
@@ -82,6 +85,26 @@ async function render() {
   }
   list.replaceChildren(...rows);
 }
+
+$('login-btn').addEventListener('click', async () => {
+  await chrome.tabs.create({ url: PORTAL_LOGIN });
+  window.close();
+});
+
+$('check').addEventListener('click', async () => {
+  const btn = $('check');
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  try {
+    const status = await chrome.runtime.sendMessage({ type: 'check-now' });
+    btn.textContent = status?.state === 'error' ? "Couldn't check" : 'Check now';
+  } catch (err) {
+    console.error('[Nourish+Green helper] check now', err);
+    btn.textContent = "Couldn't check";
+  }
+  btn.disabled = false;
+  await render();
+});
 
 $('open').addEventListener('click', async () => {
   await chrome.tabs.create({ url: PORTAL_DASHBOARD });

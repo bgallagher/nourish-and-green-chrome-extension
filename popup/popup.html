@@ -10,8 +10,15 @@
 <body>
 <header class="head">
   <h1 id="title">Lunches</h1>
-  <p id="updated" class="updated"></p>
+  <div class="meta">
+    <p id="updated" class="updated"></p>
+    <button type="button" id="check" class="check">Check now</button>
+  </div>
 </header>
+<div id="login" class="login" hidden>
+  <p>Your portal login has expired, so lunches can't be checked.</p>
+  <button type="button" id="login-btn" class="login-btn">Log in</button>
+</div>
 <main id="list" class="list" aria-live="polite"></main>
 <footer class="foot">
   <button type="button" id="open" class="open">Open planner</button>
