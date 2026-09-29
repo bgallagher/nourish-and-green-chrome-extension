@@ -356,10 +356,42 @@ html.ng-planner-page body {
   background: var(--ng-surface);
   color: var(--ng-ink);
   box-shadow: -12px 0 32px rgba(20, 30, 24, 0.14);
+
+  /* Slide in from the right on open, back out on close. `display` and `overlay` transition
+     discretely so the dialog stays visible (and in the top layer) until the slide-out ends. */
+  transform: translateX(100%);
+  transition:
+    transform 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+    display 0.3s allow-discrete,
+    overlay 0.3s allow-discrete;
+}
+
+#ng-planner .ng-drawer[open] {
+  transform: translateX(0);
+}
+
+@starting-style {
+  #ng-planner .ng-drawer[open] {
+    transform: translateX(100%);
+  }
 }
 
 #ng-planner .ng-drawer::backdrop {
+  background: rgba(20, 30, 24, 0);
+  transition:
+    background-color 0.3s ease,
+    display 0.3s allow-discrete,
+    overlay 0.3s allow-discrete;
+}
+
+#ng-planner .ng-drawer[open]::backdrop {
   background: rgba(20, 30, 24, 0.28);
+}
+
+@starting-style {
+  #ng-planner .ng-drawer[open]::backdrop {
+    background: rgba(20, 30, 24, 0);
+  }
 }
 
 html:has(#ng-planner .ng-drawer[open]) {
@@ -789,7 +821,8 @@ html:has(#ng-planner .ng-drawer[open]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #ng-planner * {
+  #ng-planner *,
+  #ng-planner .ng-drawer::backdrop {
     transition: none !important;
   }
 }
